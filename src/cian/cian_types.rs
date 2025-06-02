@@ -1,17 +1,19 @@
 use serde::{self, Deserialize, Serialize};
+use serde_json::Value;
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Lot {
     pub full_url: Option<String>,
-    pub title: String,
-    pub description: String,
+    pub title: Option<String>,
+    pub description: Option<String>,
     pub id: i32,
-    pub added: String,
-    pub total_area: String,
-    pub category: String,
-    pub formatted_full_price: String,
-    pub formatted_full_info: String,
+    pub added: Option<String>,
+    pub total_area: Option<String>,
+    pub category: Option<String>,
+    pub formatted_full_price: Option<String>,
+    pub formatted_full_info: Option<String>,
+    pub geo: Value,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -25,5 +27,5 @@ pub struct CianDataResponse {
 #[serde(rename_all = "camelCase")]
 pub struct CianResponse {
     pub data: CianDataResponse,
-    pub ok: String,
+    pub status: String,
 }

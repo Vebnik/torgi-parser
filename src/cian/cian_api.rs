@@ -1,4 +1,4 @@
-use serde_json::json;
+use serde_json::{Value, json};
 
 use super::{CianResponse, cian_types::Lot};
 
@@ -12,15 +12,35 @@ impl Lot {
         let url = "https://api.cian.ru/search-offers/v2/search-offers-desktop/";
 
         let mut results: Vec<Lot> = Vec::with_capacity(1000);
+        let mut object_type_key = "room";
 
-        for page in 0..pages {
-            let body = json!({
+        let object_type_value = match _type.as_str() {
+            "flatsale" | "flatrent" => {
+                object_type_key = "room";
+                json!({ "type": "terms", "value": [ object ] })
+            }
+
+            "suburbansale" | "suburbanrent" => {
+                object_type_key = "object_type";
+                json!({ "type": "terms", "value": [ object ] })
+            }
+
+            "commercialsale" | "commercialrent" => {
+                object_type_key = "office_type";
+                json!({ "type": "terms", "value": [ object ] })
+            }
+
+            _ => json!({ "type": "terms", "value": [ object ] }),
+        };
+
+        for page in 1..=pages {
+            let body: Value = json!({
                 "jsonQuery": {
+                    "_type": _type,
                     "region": {
                         "type": "terms",
                         "value": [ region ]
                     },
-                    "_type": _type,
                     "engine_version": {
                         "type": "term",
                         "value": 2
@@ -29,12 +49,11 @@ impl Lot {
                         "type": "term",
                         "value": page
                     },
-                    "room": {
-                        "type": "terms",
-                        "value": [ object ]
-                    }
+                    object_type_key: object_type_value
                 }
             });
+
+            log::info!("{}", body);
 
             let client = reqwest::Client::new();
             let response = client.post(url).json(&body).send().await;
