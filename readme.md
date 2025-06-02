@@ -49,3 +49,13 @@ object - see type table   <br>
 
 `Студия в Москве` -> `/api/parse/cian/1/1/flatsale/9` <br>
 `Гараж в Адыгее` -> `/api/parse/cian/1/4553/commercialrent/6` <br>
+
+## Torgi api
+
+#### URL - `/api/parse/torgi/:query/:pages`
+query - query for search lot
+pages - page count for parse (28 elements per page)    <br>
+
+### Example
+`Студия в Москве`   -> `/api/parse/torgi/студия в млскве/1` <br>
+`Гараж в Адыгее`    -> `/api/parse/torgi/гараж в Адыгее/1` <br>
